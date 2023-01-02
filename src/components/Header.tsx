@@ -6,16 +6,18 @@ import Typography from '@mui/material/Typography';
 
 const navItems = ["Menu", "Messages"]
 
+
+
 export default function Header() {
     return <AppBar component="nav">
         <Toolbar>
             <Typography
                 variant="h6"
-                sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+                sx={{ flexGrow: 1 }}
             >
                 Pielęgniarki
             </Typography>
-            <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+            <Box >
                 {navItems.map((item) => (
                     <Button key={item} sx={{ color: "inherit" }}>
                         {item}

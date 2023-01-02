@@ -1,9 +1,6 @@
 import { Rating } from "./Rating";
-import { Specialty } from "./Specialty";
 
-export type Doctor = {
-    id: number,
+export type Doctor =  {
+    _id: string,
     name: string,
-    specialties: Specialty[],
-    ratings: Rating[]
 }
