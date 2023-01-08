@@ -1,6 +1,4 @@
-import { ObjectId } from "./ObjectID";
-import { Rating } from "./Rating";
-import { Specialty } from "./Specialty";
+import { ObjectId } from "./ObjectId";
 
 export type Doctor =  {
     _id?: ObjectId,

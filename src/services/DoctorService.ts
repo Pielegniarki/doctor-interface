@@ -23,4 +23,11 @@ export class DoctorService{
 
         return json;
     }
+
+    static async listAll(): Promise<Doctor[]> {
+        const response = await fetch(DOCTOR_SERVICE + "doctors/listAll")
+        const json = await response.json() as Doctor[];
+
+        return json;
+    }
 }

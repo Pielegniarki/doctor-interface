@@ -4,6 +4,7 @@ import ResultConsumer from '../components/ResultConsumer';
 import Page from '../components/Page';
 import { doctorQuery } from '../stores/DoctorStore';
 import { Box } from '@mui/system';
+import { DoctorService } from '../services/DoctorService';
 
 const bull = (
     <Box

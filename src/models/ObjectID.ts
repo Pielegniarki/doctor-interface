@@ -1,1 +1,1 @@
-export type ObjectId = {$oid: String};
+export type ObjectId = {$oid: string};
