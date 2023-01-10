@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { VisitService } from '../services/VisitService';
 import { Visit } from '../models/Visit';
 import { useRecoilValue } from 'recoil';
-import { patientIdState } from '../stores/PatientIdStore';
+import { doctorIdState } from '../stores/DoctorIdStore';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -14,19 +14,22 @@ import CallIcon from '@mui/icons-material/Call';
 import { pl } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 import Page from '../components/Page';
+import { isOk } from '../models/Result';
 
 export default function Visits() {
   const [visits, setVisits] = useState<Visit[] | null>(null)
 
-  const patientId = useRecoilValue(patientIdState);
+  const doctorId = useRecoilValue(doctorIdState);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
-      const visits = await VisitService.fetchAllVisitsOfPatient(patientId);
-
-      setVisits(visits);
+      if(isOk(doctorId)) {
+        const visits = await VisitService.fetchAllVisitsOfDoctor(doctorId.Ok);
+        
+        setVisits(visits);
+      }
     }
 
     fetchData();
