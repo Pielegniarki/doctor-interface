@@ -10,7 +10,7 @@ export default function Failable<T>({ result, success, error }: Props<T>) {
     return (
         <>
             {
-                isOk(result) ? success(result.value) : error(result.value)
+                isOk(result) ? success(result.Ok) : error(result.Err)
             }
         </>
     );
