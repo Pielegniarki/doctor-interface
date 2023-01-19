@@ -1,5 +1,5 @@
 type Success<T> = {Ok: T};
-type Error = {Err: String};
+type Error = {Err: string};
 
 export type Result<T> = Success<T> | Error;
 
@@ -11,6 +11,6 @@ export function ok<T>(value: T): Result<T> {
     return {Ok: value}
 }
 
-export function err(message: String): Result<never> {
+export function err(message: string): Result<never> {
     return {Err: message}
 }

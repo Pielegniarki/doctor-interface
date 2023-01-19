@@ -1,12 +1,13 @@
+import { ApiReturned, Identifiable } from "./types";
 import { Visit } from "../models/Visit";
+import { Service } from "./Service";
 
-const VISIT_SERVICE = "http://localhost:4002";
 
-export class VisitService {
-    static async fetchAllVisitsOfDoctor(doctorId: number): Promise<Visit[]> {
-        const response = await fetch(VISIT_SERVICE + "/visits/getAllOfDoctor?id=" + doctorId);
-        const json = await response.json();
+export class VisitService extends Service {
+    async fetchAllVisits(): Promise<Identifiable<Visit>[]> {
+        const response = await this.get("/visits/getAllOfDoctor");
+        const json = await response.json() as ApiReturned<Identifiable<Visit>>[];
 
-        return json.map((object: Visit) => ({ ...object, date: new Date(object.date) }));
+        return json.map(object => ({ ...object, date: new Date(object.date) }));
     }
 }

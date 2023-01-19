@@ -1,14 +1,30 @@
-import AppBar from '@mui/material/AppBar';
+import { ReactNode } from 'react';
+import { Outlet } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
+import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+
+
+export default function InLayout() {
+    return <Box>
+        <Header />
+        <Box
+            component="main"
+            sx={{ p: 1 }}
+        >
+            <Toolbar />
+            <Outlet />
+        </Box>
+    </Box>
+}
 
 const navItems = ["Menu", "Messages"]
 
 
 
-export default function Header() {
+function Header() {
     return <AppBar component="nav">
         <Toolbar>
             <Typography
