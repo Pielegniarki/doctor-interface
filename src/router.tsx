@@ -48,7 +48,7 @@ function RouteSelector() {
 
 
   useEffect(() => {
-    if(isOk(token)) {
+    if(token) {
       navigate("/in/home");
     }
     else {

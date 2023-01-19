@@ -6,9 +6,7 @@ import { tokenState } from '../stores/DoctorStore';
 
 
 export default function Welcome() {
-    const doctorId = useRecoilValue(tokenState);
     const doctorInfo = useRecoilValue(doctorQuery);
-    console.log(doctorId)
 
     return (
         <ResultConsumer

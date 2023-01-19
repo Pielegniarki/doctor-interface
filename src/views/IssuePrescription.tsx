@@ -4,91 +4,60 @@ import Toolbar from '@mui/material/Toolbar';
 
 import { useNavigate } from 'react-router-dom';
 import { Container, Paper, Autocomplete, TextField, List, ListItem, Button, ListItemText, TextareaAutosize, Typography, Divider } from '@mui/material';
-import Page from '../components/Page';
+import PrescriptionSheet from '../components/PrescriptionSheet';
 import { Medicine } from '../models/Medicine';
+import { Prescription } from '../models/Prescription';
 import { PrescriptionService } from '../services/PrescriptionService';
 
 
-export default function Prescription() {
+export default function IssuePrescription() {
+  const [constructedPrescription, setConstructedPrescription] = useState<Prescription>({
+    doctor: "Doktorek",
+    creationDate: new Date(),
 
-    const [medicines, setMedicines] = useState<Medicine[]>([]);
+    medicines: [],
+    description: "",
 
-    const [medicineName, setMedicineName] = useState("");
-    const [medicineAmount, setMedicineAmount] = useState();
-    const [description, setDescription] = useState("");
+    patientId: 0xdeadbeef
+  });
 
-    const [prescriptionMedicines, setPrescriptionMedicines] = useState<Medicine[]>([]);
+  const [medicines, setMedicines] = useState<Medicine[]>([]);
 
-    const navigate = useNavigate();
+  const [medicineName, setMedicineName] = useState("");
+  const [medicineAmount, setMedicineAmount] = useState();
+  const [description, setDescription] = useState("");
 
+  const [prescriptionMedicines, setPrescriptionMedicines] = useState<Medicine[]>([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-          const medicines = await PrescriptionService.getAllMedicines()
-    
-          setMedicines(medicines);
-        }
-    
-        fetchData();
-      }, []);
+  const navigate = useNavigate();
 
-    const addMedicine = () => {
-        if(medicineName && medicineAmount){
+  useEffect(() => {
+    const fetchData = async () => {
+      const medicines = await PrescriptionService.getAllMedicines()
 
-            const medicine: Medicine = {
-                name: medicineName,
-                amount: medicineAmount
-            }   
-            setPrescriptionMedicines(currentMedicines => [...currentMedicines, medicine]);
-        }
+      setMedicines(medicines);
     }
 
-    function refreshPrescriptionAndDisplay() {
-        return <Box
-        sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'left',
-            width: "40%",
-            marginLeft: "5%"
-          }}>
-            <Paper
-              sx={{
-                flexDirection: 'column',
-                padding: "2rem"
-              }}
-            >
-             {
-              prescriptionMedicines.map((med) =>
-              <Typography
-              margin={1}
-              variant='body1'
-               >
-                {med.name} - {med.amount} pcs
-              </Typography>                 
-              )                
-              }
-              <Divider />
-              <Typography
-               marginTop={1}
-               variant="body2"
-              >
-              {description}
-              </Typography>
-            </Paper>
-        </Box>
+    fetchData();
+  }, []);
 
-    }
+  const addMedicine = () => {
+    if (medicineName && medicineAmount) {
 
-    const save = async () => {
-        // await PrescriptionService.createPrescription();
+      const medicine: Medicine = {
+        name: medicineName,
+        amount: medicineAmount
       }
-      save();
+      setPrescriptionMedicines(currentMedicines => [...currentMedicines, medicine]);
+    }
+  }
 
-    return 
-      <Page>
-        <Box display="flex" justifyContent="space-between" paddingTop="3%">
-        <Box display="flex" flexDirection="column" width="100%" gap={10}>
+  const save = async () => {
+    // await PrescriptionService.createPrescription();
+  }
+
+  return <Box display="flex" justifyContent="space-between" paddingTop="3%">
+      <Box display="flex" flexDirection="column" width="100%" gap={10}>
         {/* medicines */}
         <Box
           sx={{
@@ -99,108 +68,75 @@ export default function Prescription() {
             marginLeft: "5%"
           }}
         >
-            <Paper
-              sx={{
-                flexDirection: 'column',
-                padding: "2rem"
+          <Paper
+            sx={{
+              flexDirection: 'column',
+              padding: "2rem"
+            }}
+          >
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={medicines.map(medicine => medicine.name)}
+              onChange={(_, value) => {
+                setMedicineName(value!)
               }}
-            >
-              <Autocomplete
-                disablePortal
-                id="combo-box-demo"
-                options={medicines.map(medicine => medicine.name)}
-                onChange={(_, value) => {
-                    setMedicineName(value!)
-                  }}
-                renderInput={(params) => <TextField {...params}label="Medicines" /> }
-              />
-              <TextField 
-                label="Amount"
-                onInput={amount=> setMedicineAmount((amount.target as any).value)}
-                sx={{mt:4}}
-              />
-              <div>
+              renderInput={(params) => <TextField {...params} label="Medicines" />}
+            />
+            <TextField
+              label="Amount"
+              onInput={amount => setMedicineAmount((amount.target as any).value)}
+              sx={{ mt: 4 }}
+            />
+            <div>
               <Button
                 type="submit"
                 variant="contained"
                 onClick={addMedicine}
                 size="small"
-                sx={{mt:4}}
+                sx={{ mt: 4 }}
               >
                 Add
               </Button>
-              </div>
-            </Paper>
-            </Box>
-            {/* prescription */}
-            <Box
-            sx={{
-               display: 'flex',
-               flexDirection: 'column',
-               alignItems: 'left',
-               width: "40%",
-               marginLeft: "5%"
-             }}>
-            <Paper
-              sx={{
-                flexDirection: 'column',
-                padding: "2rem"
-              }}
-            >
-             {
-              prescriptionMedicines.map((med) =>
-              <Typography
-              margin={1}
-              variant='body1'
-               >
-                {med.name} - {med.amount} pcs
-              </Typography>                 
-              )                
-              }
-              <Divider />
-              <Typography
-               marginTop={1}
-               variant="body2"
-              >
-              {description}
-              </Typography>
-            </Paper>
+            </div>
+          </Paper>
         </Box>
-        </Box>
-        {/* desc */}
-        <Box
+        {/* prescription */}
+        <PrescriptionSheet prescription={constructedPrescription}/>
+      </Box>
+      {/* desc */}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'left',
+          width: "40%",
+          marginRight: "3%"
+        }}
+      >
+        <Paper
           sx={{
-            display: 'flex',
             flexDirection: 'column',
-            alignItems: 'left',
-            width: "40%",
-            marginRight: "3%"
+            padding: "2rem"
           }}
         >
-            <Paper
-              sx={{
-                flexDirection: 'column',
-                padding: "2rem"
-              }}
+          <TextareaAutosize
+            placeholder="Description"
+            onInput={desc => setDescription((desc.target as any).value)}
+            style={{ marginTop: 4, width: "100%", }}
+          />
+          <div>
+            <Button
+              type="submit"
+              variant="contained"
+              size="small"
+              sx={{ mt: 4 }}
+              onClick={() => console.log("XD")}
             >
-             <TextareaAutosize
-                placeholder="Description"
-                onInput={desc => setDescription((desc.target as any).value)}
-                style={{marginTop:4, width:"100%", }}
-              />
-              <div>
-                <Button
-                type="submit"
-                variant="contained"
-                onClick={refreshPrescriptionAndDisplay}
-                size="small"
-                sx={{mt:4}}
-              >
-                Add
-              </Button>
-              </div>
-            </Paper>
-        </Box>  
-        </Box>        
-        </Page>;
+              Add
+            </Button>
+          </div>
+        </Paper>
+      </Box>
+    </Box>;
 }

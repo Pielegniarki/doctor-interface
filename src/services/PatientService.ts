@@ -1,8 +1,8 @@
-import { Doctor } from "../models/Doctor";
+import { Service } from "./Service";
 
-export class DoctorService{
-    async getDoctorInfo(doctorId: number): Promise<Doctor> {
-        const response = await fetch("doctor.ip/getInfo?id=" + doctorId)
+export class PatientService extends Service {
+    async getPatientInfo(patientId: number): Promise<any> {
+        const response = await this.get("/doctor/getInfo?id=" + patientId)
         const json = await response.json();
 
         return json;

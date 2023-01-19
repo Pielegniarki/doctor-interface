@@ -8,13 +8,13 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import Page from '../components/Root';
 import { DoctorService } from '../services/DoctorService';
 import { tokenState } from '../stores/DoctorStore';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import { isOk } from '../models/Result';
 import { AuthenticationService } from '../services/AuthenticationService';
+import { authenticationServiceStore } from '../stores/ServiceStore';
 
 
 export default function SignIn() {
@@ -22,20 +22,22 @@ export default function SignIn() {
     const [password, setPassword] = React.useState("");
     const setDoctorId = useSetRecoilState(tokenState);
 
+    const auth = useRecoilValue(authenticationServiceStore);
+
     const navigate = useNavigate();
 
-    const handleSubmit = () => {
+    const handleSubmit = React.useCallback(() => {
         const fetchData = async () => {
-            const id = await AuthenticationService.login(email, password);
+            const { token } = await auth.login(email, password);
 
-            if (isOk(id)) {
-                setDoctorId(id);
+            if (token) {
+                setDoctorId(token);
                 navigate("/");
             }
         }
 
         fetchData();
-    };
+    }, [auth, email, password]);
 
     return (
             <Container component="main" maxWidth="xs">

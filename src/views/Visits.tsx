@@ -13,63 +13,61 @@ import { format, formatDistance, formatDistanceToNow, formatRelative } from 'dat
 import CallIcon from '@mui/icons-material/Call';
 import { pl } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
-import Page from '../components/Root';
-import { isOk } from '../models/Result';
 import { Identifiable } from '../services/types';
+import { visitServiceStore } from '../stores/ServiceStore';
 
 export default function Visits() {
   const [visits, setVisits] = useState<Identifiable<Visit>[] | null>(null)
 
   const token = useRecoilValue(tokenState);
+  const visitService = useRecoilValue(visitServiceStore);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
-      if(isOk(token)) {
-        const visits = await VisitService.fetchAllVisitsOfDoctor(token.Ok);
-        
-        setVisits(visits);
-      }
+      const visits = await visitService.fetchAllVisits();
+
+      setVisits(visits);
     }
 
     fetchData();
   }, [])
 
   return (
-      <Container component="main">
-        <Paper
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'left',
-          }}
-        >
-          <List>
-                {
-                  visits?.map((visit) =>
-                    <ListItem
-                      key={visit._id!.$oid}
-                      secondaryAction={
-                        <Button 
-                          variant="contained" 
-                          endIcon={<CallIcon />}
-                          onClick={() => navigate("/call/" + visit._id!.$oid)}  
-                        >
-                          Call
-                        </Button>
-                      }
-                    >
-                      <ListItemText
-                        primary={`Visit - ${format(visit.date, "Pp", {locale: pl})} (${formatDistanceToNow(visit.date)})` }
-                      />
-                    </ListItem>
-                  ) ?? null
+    <Container component="main">
+      <Paper
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'left',
+        }}
+      >
+        <List>
+          {
+            visits?.map((visit) =>
+              <ListItem
+                key={visit._id!.$oid}
+                secondaryAction={
+                  <Button
+                    variant="contained"
+                    endIcon={<CallIcon />}
+                    onClick={() => navigate("/call/" + visit._id!.$oid)}
+                  >
+                    Call
+                  </Button>
                 }
-              </List>
-        </Paper>
-      </Container>
+              >
+                <ListItemText
+                  primary={`Visit - ${format(visit.date, "Pp", { locale: pl })} (${formatDistanceToNow(visit.date)})`}
+                />
+              </ListItem>
+            ) ?? null
+          }
+        </List>
+      </Paper>
+    </Container>
   );
 
 }
