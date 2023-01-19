@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { VisitService } from '../services/VisitService';
 import { Visit } from '../models/Visit';
 import { useRecoilValue } from 'recoil';
-import { doctorIdState } from '../stores/DoctorIdStore';
+import { tokenState } from '../stores/DoctorStore';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -13,20 +13,21 @@ import { format, formatDistance, formatDistanceToNow, formatRelative } from 'dat
 import CallIcon from '@mui/icons-material/Call';
 import { pl } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
-import Page from '../components/Page';
+import Page from '../components/Root';
 import { isOk } from '../models/Result';
+import { Identifiable } from '../services/types';
 
 export default function Visits() {
-  const [visits, setVisits] = useState<Visit[] | null>(null)
+  const [visits, setVisits] = useState<Identifiable<Visit>[] | null>(null)
 
-  const doctorId = useRecoilValue(doctorIdState);
+  const token = useRecoilValue(tokenState);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
-      if(isOk(doctorId)) {
-        const visits = await VisitService.fetchAllVisitsOfDoctor(doctorId.Ok);
+      if(isOk(token)) {
+        const visits = await VisitService.fetchAllVisitsOfDoctor(token.Ok);
         
         setVisits(visits);
       }
@@ -36,7 +37,6 @@ export default function Visits() {
   }, [])
 
   return (
-    <Page>
       <Container component="main">
         <Paper
           sx={{
@@ -70,7 +70,6 @@ export default function Visits() {
               </List>
         </Paper>
       </Container>
-    </Page>
   );
 
 }

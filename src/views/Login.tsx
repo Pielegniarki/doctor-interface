@@ -8,28 +8,29 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import Page from '../components/Page';
+import Page from '../components/Root';
 import { DoctorService } from '../services/DoctorService';
-import { doctorIdState } from '../stores/DoctorIdStore';
+import { tokenState } from '../stores/DoctorStore';
 import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import { isOk } from '../models/Result';
+import { AuthenticationService } from '../services/AuthenticationService';
 
 
 export default function SignIn() {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const setDoctorId = useSetRecoilState(doctorIdState);
+    const setDoctorId = useSetRecoilState(tokenState);
 
     const navigate = useNavigate();
 
-    const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleSubmit = () => {
         const fetchData = async () => {
-            const id = await DoctorService.login(email, password);
+            const id = await AuthenticationService.login(email, password);
 
             if (isOk(id)) {
                 setDoctorId(id);
-                navigate("/welcome");
+                navigate("/");
             }
         }
 
@@ -37,16 +38,8 @@ export default function SignIn() {
     };
 
     return (
-        <Page>
             <Container component="main" maxWidth="xs">
-                <Box
-                    sx={{
-                        marginTop: 8,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
-                >
+                <Box display="flex" flexDirection="column" alignItems="center">
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                         <LockOutlinedIcon />
                     </Avatar>
@@ -63,7 +56,7 @@ export default function SignIn() {
                             name="email"
                             autoComplete="email"
                             autoFocus
-                            onInput={email => setEmail((email.target as any).value)}
+                            onInput={email => setEmail((email.target as HTMLInputElement).value)}
                         />
                         <TextField
                             margin="normal"
@@ -74,8 +67,8 @@ export default function SignIn() {
                             type="password"
                             id="password"
                             autoComplete="current-password"
-                            onInput={password => setPassword((password.target as any).value)}
-                        />
+                            onInput={password => setPassword((password.target as HTMLInputElement).value)}
+                            />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
                             label="Remember me"
@@ -85,12 +78,11 @@ export default function SignIn() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                             onClick={handleSubmit}
-                        >
+                            >
                             Sign In
                         </Button>
                     </Box>
                 </Box>
             </Container>
-        </Page>
     );
 }

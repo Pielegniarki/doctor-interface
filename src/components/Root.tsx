@@ -3,12 +3,10 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 
 import Header from "./Header";
+import { Outlet } from 'react-router-dom';
 
-type Props = {
-    children?: ReactNode
-}
 
-export default function Page({ children }: Props) {
+export default function Root() {
     return <Box>
         <Header />
         <Box
@@ -16,7 +14,7 @@ export default function Page({ children }: Props) {
             sx={{ p: 1 }}
         >
             <Toolbar />
-            {children}
+            <Outlet />
         </Box>
     </Box>
 }

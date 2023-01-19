@@ -1,13 +1,23 @@
-import { selector } from "recoil";
+import { atom, selector } from "recoil";
 import { Doctor } from "../models/Doctor";
-import { Result } from "../models/Result";
+import { err, isOk, Result } from "../models/Result";
 import { DoctorService } from "../services/DoctorService";
+
+export const tokenState = atom<Result<string>>({
+    key: "token",
+    default: err("No result yet"),
+})
 
 export const doctorQuery = selector<Result<Doctor>>({
     key: "doctor",
-    get: async () => {
-        const doctorInfo = await DoctorService.getDoctorInfo("63b3397087473f51bda2024a");
+    get: async ({get}) => {
+        const token = get(tokenState);
 
-        return doctorInfo;
+        if(!isOk(token)) {
+            return err("No token");
+        }
+        
+        const doctorInfo = await DoctorService.getDoctorInfo(token.Ok);
+        return doctorInfo;        
     }
 })
