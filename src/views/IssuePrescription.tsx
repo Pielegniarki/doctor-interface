@@ -10,7 +10,7 @@ import { Prescription } from '../models/Prescription';
 import { PrescriptionService } from '../services/PrescriptionService';
 
 
-export default function IssuePrescription() {
+export function IssuePrescription() {
   const [constructedPrescription, setConstructedPrescription] = useState<Prescription>({
     doctor: "Doktorek",
     creationDate: new Date(),

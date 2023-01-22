@@ -5,14 +5,14 @@ import { doctorQuery } from '../stores/DoctorStore';
 import { tokenState } from '../stores/DoctorStore';
 
 
-export default function Welcome() {
+export function Home() {
     const doctorInfo = useRecoilValue(doctorQuery);
 
     return (
         <ResultConsumer
             result={doctorInfo}
             success={doctor =>
-                <Typography variant="h5">
+                <Typography variant="h5" m={2}>
                     Zalogowany jako: {doctor.name}
 
                 </Typography>

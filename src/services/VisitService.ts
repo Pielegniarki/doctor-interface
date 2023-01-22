@@ -10,4 +10,11 @@ export class VisitService extends Service {
 
         return json.map(object => ({ ...object, date: new Date(object.date) }));
     }
+
+    async close(visitId: string): Promise<Visit[]> {
+        const response = await this.post("/visits/closeVisit", { body: JSON.stringify({visitId}) });
+        const json = await response.json();
+
+        return json.map((object: Visit) => ({ ...object, date: new Date(object.date) }));
+    }
 }

@@ -1,6 +1,4 @@
-import { atom, selector } from "recoil";
-import { Doctor } from "../models/Doctor";
-import { err, isOk, Result } from "../models/Result";
+import { selector } from "recoil";
 import { AuthenticationService } from "../services/AuthenticationService";
 import { DoctorService } from "../services/DoctorService";
 import { PatientService } from "../services/PatientService";

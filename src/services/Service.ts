@@ -29,10 +29,6 @@ export abstract class Service {
     }
 
     private request(endpoint: string, options?: RequestInit): Promise<Response> {
-        console.log(this.url + endpoint, {
-            ...options,
-            headers: {...this.generateHeaders(), ...options?.headers}
-        })
         return fetch(this.url + endpoint, {
             ...options,
             headers: {...this.generateHeaders(), ...options?.headers}
@@ -49,6 +45,10 @@ export abstract class Service {
     post(url: string, options?: Omit<RequestInit, "method">): Promise<Response> {
         return this.request(url, {
             ...options,
+            headers: {
+                "Content-Type": "application/json",
+                ...options?.headers
+            },
             method: "POST"
         });
     }
@@ -56,6 +56,10 @@ export abstract class Service {
     put(url: string, options?: Omit<RequestInit, "method">): Promise<Response> {
         return this.request(url, {
             ...options,
+            headers: {
+                "Content-Type": "application/json",
+                ...options?.headers
+            },
             method: "PUT"
         });
     }
@@ -63,6 +67,10 @@ export abstract class Service {
     delete(url: string, options?: Omit<RequestInit, "method">): Promise<Response> {
         return this.request(url, {
             ...options,
+            headers: {
+                "Content-Type": "application/json",
+                ...options?.headers
+            },
             method: "DELETE"
         });
     }

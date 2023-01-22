@@ -1,13 +1,13 @@
 import {useEffect} from "react";
-import { createBrowserRouter, redirect, useNavigate } from "react-router-dom";
+import { createBrowserRouter, useNavigate } from "react-router-dom";
 import OutLayout from "./components/OutLayout";
-import InLayout from "./components/InLayout";
-import Welcome from "./views/Welcome";
-import Login from "./views/Login";
 import { useRecoilValue } from "recoil";
 import { tokenState } from "./stores/DoctorStore";
-import { isOk } from "./models/Result";
-import Visits from "./views/Visits";
+import { Login } from "./views/Login";
+import { Home } from "./views/Home";
+import { Visits } from "./views/Visits";
+import { HomePage } from "./components/HomePage";
+import { Chat } from "./views/Chat";
 
 export default createBrowserRouter([
   {
@@ -24,16 +24,21 @@ export default createBrowserRouter([
   },
   {
     path: "/in",
-    element: <InLayout />,
+    element: <HomePage />,
     children: [{
       path: "home",
-      element: <Welcome />
+      element: <Home />
     }, {
       path: "visits",
       element: <Visits />
-    }, {
+    },
+    {
+      path: "call/:chatId",
+      element: <Chat />
+    }, 
+    {
       path: "chat",
-      element: <Welcome />
+      element: <Home />
     }]
   },
   {
@@ -54,7 +59,7 @@ function RouteSelector() {
     else {
       navigate("/out/login");
     }
-  }, [token])
+  }, [token, navigate])
 
   return <div>Application loading...</div>
 }
